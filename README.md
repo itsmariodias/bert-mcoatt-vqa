@@ -1,4 +1,4 @@
-# BERT based Co-Attention Networks for Visual Question Answering
+# BERT based Multiple Paralel Co-Attention Networks for Visual Question Answering
 
 This repository contains the Keras implementation for the models trained for [Visual Question Answering (VQA)](https://visualqa.org/index.html). The model architecture and other details are discussed in our paper [BERT based Multiple Parallel Co-attention Model for Visual Question Answering](https://ieeexplore.ieee.org/document/9788253).
 
@@ -65,7 +65,7 @@ python run.py --RUN train --CONFIG bert_mcoatt
 See `python run.py -h` for more details.
 1. `--RUN=str` for mode to run in. Either `'train', 'eval' or 'test'`.
 2. `--CONFIG=str` loads the yaml config file to use for building the model. See `configs/` for config files for the models given in our paper.
-3. `--VERSION=str` for which model version to load either for resuming training or for evaluation.
+3. `--VERSION=str` for which model version to load either to resume training or for evaluation.
 4. `--EVAL=True` for whether we evaluate the model after training is done.
 5. `--PRELOAD=True` loads all image features directly into memory. Only do this if you have sufficient RAM.
 6. `--DATA_DIR=str` for where the dataset and other files are stored. Default is `data/`.
@@ -89,7 +89,7 @@ VQA Consortium for providing the [VQA v2.0 dataset](https://visualqa.org/index.h
 
 [Hierarchical Question-Image Co-Attention for Visual Question Answering](https://github.com/jiasenlu/HieCoAttenVQA) for providing their code and implementation. You can see their paper [here](https://arxiv.org/abs/1606.00061). 
 
-[BERT (Bidirectional Encoder Representations from Transformers)](https://github.com/google-research/bert) for providing their pretrained language models. You can their papers [here](https://arxiv.org/abs/1810.04805) and [here](https://arxiv.org/abs/1908.08962).
+[BERT (Bidirectional Encoder Representations from Transformers)](https://github.com/google-research/bert) for providing their pretrained language models. You can see their papers [here](https://arxiv.org/abs/1810.04805) and [here](https://arxiv.org/abs/1908.08962).
 
 [Hugging Face Transformers library](https://github.com/huggingface/transformers) for providing the BERT implementation interface to use in Keras/Tensorflow.
 
