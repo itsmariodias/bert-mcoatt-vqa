@@ -1,4 +1,4 @@
-# BERT based Multiple Paralel Co-Attention Networks for Visual Question Answering
+# BERT based Multiple Parallel Co-Attention Networks for Visual Question Answering
 
 This repository contains the Keras implementation for the models trained for [Visual Question Answering (VQA)](https://visualqa.org/index.html). The model architecture and other details are discussed in our paper [BERT based Multiple Parallel Co-attention Model for Visual Question Answering](https://ieeexplore.ieee.org/document/9788253).
 
