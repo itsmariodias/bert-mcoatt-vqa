@@ -6,6 +6,7 @@ Currently, accepted models are 'vgg19' and 'resnet152'.
 """
 
 from configs.base_config import Config
+from utils.read_tsv import read_tsv
 
 import os
 import pandas as pd
@@ -56,14 +57,7 @@ def get_image_ids(questions_path):
     return unique_images
 
 
-def coco_extract(C):
-    # create directory if it doesn't exist
-    os.makedirs(C.FEATURES_DIR, exist_ok=True)
-
-    data_list = ['train', 'val']
-    if C.TRAIN_SPLIT != 'train' or C.RUN_MODE == 'test':
-        data_list.append('test')
-
+def imagenet_extract(C, num_images, unique_images_list, data_list):
     # load necessary models based on model type
     if C.FEATURES_TYPE == "vgg19":
         model = tf.keras.applications.VGG19(include_top=False, weights="imagenet", input_shape=(448, 448, 3))
@@ -74,20 +68,6 @@ def coco_extract(C):
     else:
         print(f"ERROR: Invalid coco feature type. Given {C.FEATURES_TYPE}.")
         exit(-1)
-
-    unique_images_list = []
-
-    for data in data_list:
-        unique_images_list.append(get_image_ids(C.QUESTION_PATH[data]))
-
-    num_images = sum(len(x) for x in unique_images_list)
-
-    if len(os.listdir(C.FEATURES_DIR)) == num_images:
-        if C.VERBOSE: print(f"\nAll {C.FEATURES_TYPE} features have already been extracted. Skipping...")
-        return
-
-    if C.VERBOSE: print(f"\nAll {C.FEATURES_TYPE} features have not been extracted.")
-    print("Beginning extraction process...")
 
     # initialize progress bar to track
     progbar = tf.keras.utils.Progbar(num_images, verbose=1)
@@ -110,6 +90,66 @@ def coco_extract(C):
         for image_id in unique_images:
             extract(C.FEATURES_DIR, image_dir, image_id, prefix, ".jpg", preprocess_input, model)
             progbar.add(1)
+
+
+def bottom_up_extract(C, num_images, data_list):
+    # initialize progress bar to track
+    progbar = tf.keras.utils.Progbar(num_images, verbose=1)
+
+    # get directory of the tsv files
+    if C.IMG_SEQ_LEN == 100:
+        trainval_file = os.path.join(C.DATA_DIR, "tsv", "trainval")
+        test_file = os.path.join(C.DATA_DIR, "tsv", "test2015")
+    elif C.IMG_SEQ_LEN == 36:
+        trainval_file = os.path.join(C.DATA_DIR, "tsv", "trainval_36")
+        test_file = os.path.join(C.DATA_DIR, "tsv", "test2015_36")
+    else:
+        print(f'ERROR: Wrong feature dimensions. Acceptable dimensions are 100 (adaptive) or 36. '
+              f'Given {C.IMG_SEQ_LEN}.')
+        exit(-1)
+
+    if 'train' in data_list or 'val' in data_list:
+        if not os.path.exists(trainval_file):
+            print(f'ERROR: {trainval_file} does not exist. Please store tsv files here.')
+            exit(-1)
+
+        for tsv_file in os.listdir(trainval_file):
+            read_tsv(os.path.join(trainval_file, tsv_file), C.FEATURES_DIR, progbar)
+    if 'test' in data_list:
+        if not os.path.exists(test_file):
+            print(f'ERROR: {test_file} does not exist. Please store tsv files here.')
+            exit(-1)
+
+        for tsv_file in os.listdir(test_file):
+            read_tsv(os.path.join(test_file, tsv_file), C.FEATURES_DIR, progbar)
+
+
+def coco_extract(C):
+    # create directory if it doesn't exist
+    os.makedirs(C.FEATURES_DIR, exist_ok=True)
+
+    data_list = ['train', 'val']
+    if (C.TRAIN_SPLIT != 'train' and C.EVAL) or C.RUN_MODE == 'test':
+        data_list.append('test')
+
+    unique_images_list = []
+
+    for data in data_list:
+        unique_images_list.append(get_image_ids(C.QUESTION_PATH[data]))
+
+    num_images = sum(len(x) for x in unique_images_list)
+
+    if len(os.listdir(C.FEATURES_DIR)) == num_images:
+        if C.VERBOSE: print(f"\nAll {C.FEATURES_TYPE} features have already been extracted. Skipping...")
+        return
+
+    if C.VERBOSE: print(f"\nAll {C.FEATURES_TYPE} features have not been extracted.")
+    print("Beginning extraction process...")
+
+    if C.FEATURES_TYPE == "bottom_up_100" or C.FEATURES_TYPE == "bottom_up_36":
+        bottom_up_extract(C, num_images, data_list)
+    else:
+        imagenet_extract(C, num_images, unique_images_list, data_list)
 
     print(f"All {C.FEATURES_TYPE} features have been successfully extracted.")
 

@@ -1,5 +1,5 @@
 from utils.data_utils import tokenize, image_feat_preload, ans_proc, select_top_n_answers, \
-    image_feat_path_load, get_answer
+    image_feat_path_load, get_answer, create_soft_labels
 
 import tensorflow as tf
 import json
@@ -19,14 +19,17 @@ class VQADataGenerator(tf.keras.utils.Sequence):
 
         data, answers = [], []
 
-        self.step_size, self.shuffle, self.labels = None, False, True
+        self.step_size, self.shuffle, self.labels, self.use_mask = None, False, True, False
 
         if mode in ['train']:
             for split in C.TRAIN_SPLIT.split('+'):
                 # load data from each json file
                 data += json.load(open(C.QUESTION_PATH[split], 'r'))['questions']
                 # contains list of answers given they appear in the ans vocab for each question
-                answers += json.load(open(C.ANSWER_PATH[split], 'r'))['annotations']
+                if C.ANSWERS_TYPE == 'softscore':
+                    answers += joblib.load(C.ANSWER_TARGET_PATH[split])
+                else:
+                    answers += json.load(open(C.ANSWER_PATH[split], 'r'))['annotations']
 
             self.step_size, self.shuffle = C.TRAIN_STEP_SIZE, True
 
@@ -34,7 +37,10 @@ class VQADataGenerator(tf.keras.utils.Sequence):
             # load data from each json file
             data += json.load(open(C.QUESTION_PATH['val'], 'r'))['questions']
             # contains list of answers given they appear in the ans vocab for each question
-            answers += json.load(open(C.ANSWER_PATH['val'], 'r'))['annotations']
+            if C.ANSWERS_TYPE == 'softscore':
+                answers += joblib.load(C.ANSWER_TARGET_PATH['val'])
+            else:
+                answers += json.load(open(C.ANSWER_PATH['val'], 'r'))['annotations']
 
             self.step_size = C.VAL_STEP_SIZE
 
@@ -66,11 +72,12 @@ class VQADataGenerator(tf.keras.utils.Sequence):
         questions = data['question'].tolist()
         images = data['image_id'].tolist()
 
-        # load label encoder generated during answer encoding
-        label_encoder = joblib.load(C.LABEL_ENCODER_PATH)
+        if C.ANSWERS_TYPE != 'softscore':
+            # load label encoder generated during answer encoding
+            label_encoder = joblib.load(C.LABEL_ENCODER_PATH)
 
         # select the data that corresponds to the answers that appear in the label encoder
-        if mode in ['train', 'val', 'val-half']:
+        if mode in ['train', 'val', 'val-half'] and C.ANSWERS_TYPE != 'softscore':
             answers = get_answer(answers, C.ANSWERS_TYPE)
             questions, answers, images = select_top_n_answers(questions, answers, images, label_encoder.classes_)
 
@@ -91,12 +98,17 @@ class VQADataGenerator(tf.keras.utils.Sequence):
             self.images = image_feat_path_load(images, C.FEATURES_DIR)
 
         self.img_seq_len = C.IMG_SEQ_LEN
+        if C.MODEL_TYPE in ["bert_mcan", "bert_altcoatt"]:
+            self.use_mask = True
         if C.VERBOSE: print("Images loaded.")
 
         # Encode answers if working on train or val splits
         if mode in ['train', 'val', 'val-half']:
             if C.VERBOSE: print("Encoding all answers...")
-            self.answers = ans_proc(answers, label_encoder, C.NUM_CLASSES)
+            if C.ANSWERS_TYPE == 'softscore':
+                self.answers = create_soft_labels(answers, C.NUM_CLASSES)
+            else:
+                self.answers = ans_proc(answers, label_encoder, C.NUM_CLASSES)
             if C.VERBOSE: print("Answers loaded.")
 
         self.batch_size = C.BATCH_SIZE
@@ -114,17 +126,32 @@ class VQADataGenerator(tf.keras.utils.Sequence):
         question_ids = self.questions['input_ids'][inds]
         question_masks = self.questions['attention_mask'][inds]
 
-        img_feats = self.get_images(self.images[inds])
-
         ans_batch = None
         if self.labels:
             ans_batch = self.answers[inds]
 
-        return [img_feats, question_ids, question_masks], ans_batch
+        if self.use_mask:
+            img_feats, img_masks = self.get_images_with_mask(self.images[inds])
+            return [img_feats, img_masks, question_ids, question_masks], ans_batch
+        else:
+            img_feats = self.get_images(self.images[inds])
+            return [img_feats, question_ids, question_masks], ans_batch
 
     def on_epoch_end(self):
         if self.shuffle:
             np.random.shuffle(self.indices)
+
+    # load the images and pad them and generate corresponding masks
+    def load_and_pad(self, x):
+        arr = self.load_feat(x)
+        arr = np.pad(arr, pad_width=((0, self.img_seq_len - arr.shape[0]), (0, 0)), mode='constant',
+                     constant_values=0.0)
+        mask = (np.sum(np.absolute(arr), axis=-1) != 0).astype(int)
+        return arr, mask
+
+    def get_images_with_mask(self, images_input):
+        arr, mask = list(map(np.array, zip(*list(map(self.load_and_pad, images_input)))))
+        return arr, mask
 
     # load the images
     def load_feat(self, x):

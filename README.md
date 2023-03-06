@@ -42,7 +42,7 @@ We use the VQA v2.0 dataset provided [here](https://visualqa.org/download.html) 
 	|  |  |-- ...
 	|  |-- v2_OpenEnded_mscoco_train2014_questions.json
 	|  |-- v2_mscoco_train2014_annotations.json
-	|-- validate
+	|-- val
 	|  |-- val2014
 	|  |  |-- COCO_val2014_...jpg
 	|  |  |-- ...

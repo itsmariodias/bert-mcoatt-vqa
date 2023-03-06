@@ -83,6 +83,7 @@ def vqaEval(C):
         print("\n")
 
     # plot accuracy for various question types
+    plt.figure()
     plt.bar(range(len(vqaEval.accuracy['perQuestionType'])), vqaEval.accuracy['perQuestionType'].values(),
             align='center')
     plt.xticks(range(len(vqaEval.accuracy['perQuestionType'])), vqaEval.accuracy['perQuestionType'].keys(),
@@ -114,7 +115,10 @@ def evaluate(C, model=None):
         model = build_model(C)
 
     # this is list obtaining corresponding index to each answer
-    label2ans = joblib.load(C.LABEL_ENCODER_PATH).classes_
+    if C.ANSWERS_TYPE == "softscore":
+        label2ans = joblib.load(C.LABEL2ANS)
+    else:
+        label2ans = joblib.load(C.LABEL_ENCODER_PATH).classes_
 
     if C.RUN_MODE == 'eval':
         question_ids = pd.DataFrame(json.load(open(C.QUESTION_PATH["val"], 'r'))['questions'])['question_id']
