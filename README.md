@@ -55,6 +55,26 @@ We use the VQA v2.0 dataset provided [here](https://visualqa.org/download.html) 
 	|  |-- v2_OpenEnded_mscoco_test2015_questions.json
 ```
 
+For the questions and annotations required from the [Visual Genome](http://visualgenome.org/) dataset, please download from the links provided [here](https://github.com/MILVLG/mcan-vqa#setup) and extract and store them in the `data` folder as shown:
+```html
+|-- data
+    |-- vg
+    |  |-- VG_annotations.json
+    |  |-- VG_questions.json
+```
+
+For the bottom-up attention image features, please download the files from [here](https://github.com/peteanderson80/bottom-up-attention#pretrained-features) and extract and store them in the `data` folder as shown:
+```html
+|-- data
+    |-- tsv
+	|  |-- test2015
+	|  |  |-- test2015_resnet101...tsv
+	|  |  |-- ...
+	|  |-- trainval
+	|  |  |-- karpathy_train_resnet101...tsv
+	|  |  |-- ...
+```
+
 ## Training
 The following script will start training with the default parameters:
 ```commandline
@@ -65,13 +85,17 @@ python run.py --RUN train --CONFIG bert_mcoatt
 See `python run.py -h` for more details.
 1. `--RUN=str` for mode to run in. Either `'train', 'eval' or 'test'`.
 2. `--CONFIG=str` loads the yaml config file to use for building the model. See `configs/` for config files for the models given in our paper.
-3. `--VERSION=str` for which model version to load either to resume training or for evaluation.
-4. `--EVAL=True` for whether we evaluate the model after training is done.
-5. `--PRELOAD=True` loads all image features directly into memory. Only do this if you have sufficient RAM.
-6. `--DATA_DIR=str` for where the dataset and other files are stored. Default is `data/`.
-7. `--OUTPUT_DIR=str` for where the results are saved. Default is `results/`.
-8. `--CHECKPOINT_DIR=str` for where the model checkpoints are saved. Default is `checkpoints/`.
-9. `--FEATURES_DIR=str` for where the image features are stored. Default is `data/{feature_type}`.
+3. `--SPLIT=str` the data split on which the model should be trained on. Default is `train`.
+4. `--NO_EVAL` for whether we evaluate the model after training is done. Include if you do not want to evaluate.
+5. `--PRELOAD` loads all image features directly into memory. Only do this if you have sufficient RAM.
+6. `--SEED=int` Specify seed to be used by random number generators during training.
+7. `--VERSION=str` for which model version to load either to resume training or for evaluation. Version is based on seed generated.
+8. `--DATA_DIR=str` for where the dataset and other files are stored. Default is `data/`.
+9. `--OUTPUT_DIR=str` for where the results are saved. Default is `results/`.
+10. `--CHECKPOINT_DIR=str` for where the model checkpoints are saved. Default is `checkpoints/`.
+11. `--FEATURES_DIR=str` for where the image features are stored. Default is `data/{feature_type}`.
+12. `--START_EPOCH=int` for which epoch to start training. Useful for resuming training. Default is `0`.
+13. `--FEATURES_DIR=int` for how many epochs to train the model for. Default is `10`.
 
 ## Evaluation
 The following script will start evaluation:
@@ -93,7 +117,9 @@ VQA Consortium for providing the [VQA v2.0 dataset](https://visualqa.org/index.h
 
 [Hugging Face Transformers library](https://github.com/huggingface/transformers) for providing the BERT implementation interface to use in Keras/Tensorflow.
 
-[Deep Modular Co-Attention Networks (MCAN)](https://github.com/MILVLG/mcan-vqa) for providing inspiration for the training/evaluation interface.
+[Deep Modular Co-Attention Networks (MCAN)](https://github.com/MILVLG/mcan-vqa) for providing their code and implementation. You can see their paper [here](https://arxiv.org/abs/1906.10770). 
+
+[Bottom-Up Attention](https://github.com/peteanderson80/bottom-up-attention) for providing the pretrained image features and API for extracting the same as well as the insights for improving performance during classification. You can see their paper [here](https://arxiv.org/abs/1707.07998) and [here](https://arxiv.org/abs/1708.02711).
 
 ## Citation
 If this repository was useful for your work, it would be greatly appreciated if you could cite the following paper:

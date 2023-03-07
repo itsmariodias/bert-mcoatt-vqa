@@ -1,8 +1,15 @@
 """
 Utility to extract the coco image features and store them prior to training.
 We use models pretrained on ImageNet to extract the features.
-For Bottom-Up Attention, we extract the features from the pretrained files provided by
+Very Deep Convolutional Networks for Large-Scale Image Recognition
+Ref: https://arxiv.org/abs/1409.1556
+Deep Residual Learning for Image Recognition
+Ref: https://arxiv.org/abs/1512.03385
+
+For Bottom-Up Attention, we extract the features from the pretrained files provided at
 https://github.com/peteanderson80/bottom-up-attention/
+Bottom-Up and Top-Down Attention for Image Captioning and Visual Question Answering
+Ref: https://arxiv.org/abs/1707.07998
 
 Currently, accepted models are 'vgg19', 'resnet152', 'bottom_up_36' and 'bottom_up_100'.
 """
