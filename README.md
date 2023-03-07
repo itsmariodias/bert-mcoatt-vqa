@@ -2,7 +2,7 @@
 
 This repository contains the Keras implementation for the models trained for [Visual Question Answering (VQA)](https://visualqa.org/index.html). The model architecture and other details are discussed in our paper [BERT based Multiple Parallel Co-attention Model for Visual Question Answering](https://ieeexplore.ieee.org/document/9788253).
 
-![MCAN w/ BERT based Encoder](misc/BERT+MCAN Final.png)
+![MCAN w/ BERT based Encoder](misc/BERT+MCAN.png)
 
 
 The models currently implemented for training and evaluation (scores are on the VQA v2.0 *val* split) are:
