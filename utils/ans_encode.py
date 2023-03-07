@@ -4,9 +4,17 @@ Each question in the VQA dataset contains 10 human annotated answers.
 We extract a single answer from each question and then select the top N most occurring answers.
 Then we encode each answer, so we can one-hot encode them during training.
 
+In case of 'softscore' answer types, we refer to the implementation based on findings in
+Tips and Tricks for Visual Question Answering: Learnings from the 2017 Challenge where we assign soft scores to each
+annotated answer for each question. The answers we select for encoding are the answers that occur more than 8 times in
+the combined train+val VQA v2.0 dataset
+Ref: https://arxiv.org/abs/1708.02711
+
 The default answer types we use are 'mcq' and 'modal'.
 'mcq' extracts the machine generated answer.
 'modal' extracts the most common answer from the 10 human annotated answers.
+'softscore' extracts the all answers for each question which occur more than 8 times in the train+val split and assigns
+a score between 0 and 1 for each (this score is based on the VQA evaluation metric)
 """
 
 from configs.base_config import Config
@@ -50,13 +58,16 @@ def encode_softscore(C):
     val_answers = json.load(open(C.ANSWER_PATH['val']))['annotations']
     if C.VERBOSE: print("Answers loaded.")
 
+    # Combine the list of train and val answers and filter to select answers which occur more than 8 times (> 9)
     answers = train_answers + val_answers
     occurrence = cs.filter_answers(answers, 9)
     if C.VERBOSE: print('Num of answers that appear >= %d times: %d' % (9, len(occurrence)))
 
+    # encode answers to generate indices for each answer.
     ans2label = cs.create_ans2label(occurrence, 'trainval', cache_root=C.DATA_DIR)
     if C.VERBOSE: print(f"Label encoder and decoder saved at {C.ANS2LABEL} and {C.LABEL2ANS}")
 
+    # apply the above encoder to each data split
     cs.compute_target(train_answers, ans2label, 'train', cache_root=C.TRAIN_DIR)
     cs.compute_target(val_answers, ans2label, 'val', cache_root=C.VAL_DIR)
 

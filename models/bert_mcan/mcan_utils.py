@@ -1,3 +1,11 @@
+"""
+Deep Modular Co-Attention Networks for Visual Question Answering
+Ref: https://arxiv.org/abs/1906.10770
+Ref: https://github.com/MILVLG/mcan-vqa
+
+This implementation is based on a Tensorflow-based version of the code given in the repository linked above
+"""
+
 import tensorflow as tf
 
 

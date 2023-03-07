@@ -1,8 +1,10 @@
 """
 Utility to extract the coco image features and store them prior to training.
 We use models pretrained on ImageNet to extract the features.
+For Bottom-Up Attention, we extract the features from the pretrained files provided by
+https://github.com/peteanderson80/bottom-up-attention/
 
-Currently, accepted models are 'vgg19' and 'resnet152'.
+Currently, accepted models are 'vgg19', 'resnet152', 'bottom_up_36' and 'bottom_up_100'.
 """
 
 from configs.base_config import Config
@@ -108,6 +110,7 @@ def bottom_up_extract(C, num_images, data_list):
               f'Given {C.IMG_SEQ_LEN}.')
         exit(-1)
 
+    # verify if the relevant tsv files are present in directory
     if 'train' in data_list or 'val' in data_list:
         if not os.path.exists(trainval_file):
             print(f'ERROR: {trainval_file} does not exist. Please store tsv files here.')
@@ -134,6 +137,7 @@ def coco_extract(C):
 
     unique_images_list = []
 
+    # get list of unique image ids
     for data in data_list:
         unique_images_list.append(get_image_ids(C.QUESTION_PATH[data]))
 

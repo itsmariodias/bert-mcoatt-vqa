@@ -9,7 +9,6 @@ import pandas as pd
 import numpy as np
 import tensorflow as tf
 import json
-from sklearn.preprocessing import LabelEncoder
 from matplotlib import pyplot as plt
 
 
@@ -104,8 +103,10 @@ def vqaEval(C):
     if C.VERBOSE: print(f"\nEvaluation results saved at {C.OUTPUT_DIR}.")
 
 
+# evaluate the model at end of training
 def evaluate(C, model=None):
-    # evaluate the model at end of training
+    # create directory if it doesn't exist
+    os.makedirs(C.OUTPUT_DIR, exist_ok=True)
 
     print("\nStarting evaluation process...")
     eval_gen = VQADataGenerator(C, mode=C.RUN_MODE)

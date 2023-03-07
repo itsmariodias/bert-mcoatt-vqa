@@ -134,7 +134,8 @@ def preprocess_answer(answer):
 
 
 def filter_answers(answers_dset, min_occurence):
-    """This will change the answer to preprocessed version
+    """
+    This will change the answer to preprocessed version
     """
     occurence = {}
 
@@ -153,7 +154,8 @@ def filter_answers(answers_dset, min_occurence):
 
 
 def create_ans2label(occurence, name, cache_root='data/cache'):
-    """Note that this will also create label2ans.pkl at the same time
+    """
+    Note that this will also create label2ans.pkl at the same time
     occurence: dict {answer -> whatever}
     name: prefix of the output file
     cache_root: str
@@ -174,7 +176,8 @@ def create_ans2label(occurence, name, cache_root='data/cache'):
 
 
 def compute_target(answers_dset, ans2label, name, cache_root='data/cache'):
-    """Augment answers_dset with soft score as label
+    """
+    Augment answers_dset with soft score as label
     ***answers_dset should be preprocessed***
     Write result into a cache file
     """

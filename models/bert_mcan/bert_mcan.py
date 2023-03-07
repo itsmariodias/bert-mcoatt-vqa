@@ -1,9 +1,18 @@
-import tensorflow as tf
-import transformers
+"""
+Deep Modular Co-Attention Networks for Visual Question Answering
+Ref: https://arxiv.org/abs/1906.10770
+Ref: https://github.com/MILVLG/mcan-vqa
+
+This implementation is based on a Tensorflow-based version of the code given in the repository linked above.
+"""
 
 from models.bert_mcan.decoder import Decoder, DecoderBlock
 from models.bert_mcan.mcan_utils import AttentionReduction, MLP
 from models.build_utils import loss, score
+
+import tensorflow as tf
+import transformers
+
 
 CUSTOM_OBJECTS = {
     'loss': loss,

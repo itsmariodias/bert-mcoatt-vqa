@@ -3,8 +3,8 @@ Hierarchical Question-Image Co-Attention for Visual Question Answering
 Ref: https://arxiv.org/abs/1606.00061
 Ref: https://github.com/jiasenlu/HieCoAttenVQA
 
-This implementation is based on work done by Harsha Reddy (https://github.com/harsha977) Ref:
-https://medium.com/@harshareddykancharla/visual-question-answering-with-hierarchical-question-image-co-attention-c5836684a180
+This implementation is based on work done by Harsha Reddy (https://github.com/harsha977)
+Ref: https://medium.com/@harshareddykancharla/visual-question-answering-with-hierarchical-question-image-co-attention-c5836684a180
 """
 
 import tensorflow as tf

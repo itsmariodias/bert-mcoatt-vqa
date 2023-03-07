@@ -18,7 +18,13 @@ def score(y_true, y_pred):
     return tf.reduce_sum(scores, axis=-1)
 
 
+# Custom lr scheduler based on the scheduler used to train BERT.
 def get_lr_schedule(C, data_gen):
+    """
+    Learning rate scheduler adapted from BERT: Pre-training of Deep Bidirectional Transformers for Language
+    Understanding
+    Ref: https://arxiv.org/abs/1810.04805
+    """
     num_epochs = len(data_gen)
     num_steps = num_epochs * (C.END_EPOCH - C.START_EPOCH)
 

@@ -1,3 +1,12 @@
+"""
+Deep Modular Co-Attention Networks for Visual Question Answering
+Ref: https://arxiv.org/abs/1906.10770
+Ref: https://github.com/MILVLG/mcan-vqa
+
+This implementation is based on a Tensorflow-based version of the code given in the repository linked above
+We also refer to the code samples given at https://keras.io/examples/nlp/text_classification_with_transformer/
+"""
+
 import tensorflow as tf
 
 from models.bert_mcan.mcan_utils import MLP
