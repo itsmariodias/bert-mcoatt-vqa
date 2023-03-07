@@ -2,16 +2,26 @@
 
 This repository contains the Keras implementation for the models trained for [Visual Question Answering (VQA)](https://visualqa.org/index.html). The model architecture and other details are discussed in our paper [BERT based Multiple Parallel Co-attention Model for Visual Question Answering](https://ieeexplore.ieee.org/document/9788253).
 
+![MCAN w/ BERT based Encoder](misc/BERT+MCAN Final.png)
+
+
 The models currently implemented for training and evaluation (scores are on the VQA v2.0 *val* split) are:
 
-| Model                                           | Yes/No    | Number    | Other     | All       |
-|-------------------------------------------------|-----------|-----------|-----------|-----------|
-| BERT based Hierarchical Co-Attention            | 69.36     | 34.61     | 44.4      | 52.49     |
-| BERT based HieCoAtt w/ Shared Co-Attention      | 73.36     | 36.79     | 43.66     | 54.03     |
-| BERT based Multiple Parallel Co-Attention       | 76.44     | 37.24     | 48.15     | 57.84     |
-| BERT based Multiple Parallel Co-Attention Large | **76.97** | **37.45** | **49.61** | **58.29** |
+| Model                                              | Yes/No    | Number    | Other     | All       |
+|----------------------------------------------------|-----------|-----------|-----------|-----------|
+| BERT based Hierarchical Co-Attention               | 69.36     | 34.61     | 44.4      | 52.49     |
+| BERT based HieCoAtt w/ Shared Co-Attention         | 73.36     | 36.79     | 43.66     | 54.03     |
+| BERT based Multiple Parallel Co-Attention          | 76.44     | 37.24     | 48.15     | 57.84     |
+| BERT based Multiple Parallel Co-Attention Large    | 76.97     | 37.45     | 49.61     | 58.29     |
+| BERT based HieAltCoAtt w/ Bottom-Up Image Features | 81.88     | 43.02     | 55.84     | 63.94     |
+| MCAN w/ BERT based Encoder                         | **84.87** | **48.31** | **58.66** | **67.15** |
 
-![BERT based Multiple Parallel Co-Attention](misc/BERT+MPCoAtt.png)
+Our best model achieves an overall accuracy of **71.0%** on the _test-std_ split of the VQA v2.0 dataset as part of the [VQA Challenge](https://eval.ai/web/challenges/challenge-page/830/overview). \
+The performance on the _test-dev_ split is reported as follows:
+
+| Model                      | Yes/No | Number | Other | All   |
+|----------------------------|--------|--------|-------|-------|
+| MCAN w/ BERT based Encoder | 86.96  | 52.87  | 60.53 | 70.55 |
 
 ## Table of Contents
 0. [Setup](#Setup)
