@@ -1,6 +1,7 @@
 from models.bert_hiecoatt import bert_hiecoatt
 from models.bert_mcoatt import bert_mcoatt
 from models.bert_mcan import bert_mcan
+from models.bert_hiealtcoatt import bert_hiealtcoatt
 from models.build_utils import get_lr_schedule, loss, score
 
 import tensorflow as tf
@@ -18,6 +19,8 @@ def build_model(C, data_gen):
             custom_objects = bert_hiecoatt.CUSTOM_OBJECTS
         elif C.MODEL_TYPE == "bert_mcan":
             custom_objects = bert_mcan.CUSTOM_OBJECTS
+        elif C.MODEL_TYPE == "bert_hiealtcoatt":
+            custom_objects = bert_hiealtcoatt.CUSTOM_OBJECTS
         else:
             print(f'ERROR: Invalid model type. Given {C.MODEL_TYPE}.')
             exit(-1)
@@ -30,6 +33,16 @@ def build_model(C, data_gen):
     else:
         # If starting from scratch
         if C.VERBOSE: print("\nBuilding model...")
+
+        # To address cases where user wants to train on bert-large or default hiealtcoatt model
+        if C.HIDDEN_SIZE == 1024 and C.NUM_LAYERS == 24 and C.NUM_HEADS == 16:
+            if C.VERBOSE: print("WARNING: Configuration specifies bert-large-uncased model, loading the same...")
+            C.BERT_MODEL_PATH['target'] = "bert-large-uncased"
+        if C.HIDDEN_SIZE == 1024:
+            if C.VERBOSE: print(
+                "WARNING: There is no compact BERT model with size = 1024, loading bert-base-uncased instead...")
+            C.BERT_MODEL_PATH['target'] = "bert-base-uncased"
+
         if C.MODEL_TYPE == "bert_hiecoatt":
             model = bert_hiecoatt.BERT_HieCoAtt(C)
         elif C.MODEL_TYPE == "bert_hiecoatt_shared":
@@ -38,11 +51,14 @@ def build_model(C, data_gen):
             model = bert_mcoatt.BERT_MultipleCoAtt(C)
         elif C.MODEL_TYPE == "bert_mcan":
             model = bert_mcan.BERT_MCAN(C)
+        elif C.MODEL_TYPE == "bert_hiealtcoatt":
+            model = bert_hiealtcoatt.BERT_HieAltCoAtt(C)
         else:
             print(f'ERROR: Invalid model type. Given {C.MODEL_TYPE}.')
             exit(-1)
 
         # Load optimizer for training, we use Adam for all our models.
+        # If using weight decay, load the optimizer used by BERT from transformers.
         if C.ADAM_WEIGHT_DECAY > 0:
             lr_schedule = get_lr_schedule(C, data_gen)
             optimizer = transformers.AdamWeightDecay(

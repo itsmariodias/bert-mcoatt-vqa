@@ -98,7 +98,7 @@ class VQADataGenerator(tf.keras.utils.Sequence):
             self.images = image_feat_path_load(images, C.FEATURES_DIR)
 
         self.img_seq_len = C.IMG_SEQ_LEN
-        if C.MODEL_TYPE in ["bert_mcan", "bert_altcoatt"]:
+        if C.MODEL_TYPE in ["bert_mcan", "bert_hiealtcoatt"]:
             self.use_mask = True
         if C.VERBOSE: print("Images loaded.")
 
