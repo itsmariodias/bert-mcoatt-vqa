@@ -97,6 +97,9 @@ def parse_args():
 
 
 def run(C):
+    # create directory if it doesn't exist
+    os.makedirs(C.DATA_DIR, exist_ok=True)
+
     set_seed(C.SEED)
 
     coco_extract(C)

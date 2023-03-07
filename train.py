@@ -73,6 +73,10 @@ def load_callbacks(C, train_gen):
 
 
 def train(C):
+    # create directory if it doesn't exist
+    os.makedirs(C.OUTPUT_DIR, exist_ok=True)
+    os.makedirs(C.CHECKPOINT_DIR, exist_ok=True)
+
     print("\nStarting training process...")
     train_gen = VQADataGenerator(C, mode="train")
 
