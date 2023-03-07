@@ -69,7 +69,6 @@ For the bottom-up attention image features, please download the files from [here
     |-- tsv
 	|  |-- test2015
 	|  |  |-- test2015_resnet101...tsv
-	|  |  |-- ...
 	|  |-- trainval
 	|  |  |-- karpathy_train_resnet101...tsv
 	|  |  |-- ...
@@ -117,9 +116,9 @@ VQA Consortium for providing the [VQA v2.0 dataset](https://visualqa.org/index.h
 
 [Hugging Face Transformers library](https://github.com/huggingface/transformers) for providing the BERT implementation interface to use in Keras/Tensorflow.
 
-[Deep Modular Co-Attention Networks (MCAN)](https://github.com/MILVLG/mcan-vqa) for providing their code and implementation. You can see their paper [here](https://arxiv.org/abs/1906.10770). 
+[Deep Modular Co-Attention Networks (MCAN)](https://github.com/MILVLG/mcan-vqa) for providing their code and implementation. You can see their papers [here](https://arxiv.org/abs/1906.10770). 
 
-[Bottom-Up Attention](https://github.com/peteanderson80/bottom-up-attention) for providing the pretrained image features and API for extracting the same as well as the insights for improving performance during classification. You can see their paper [here](https://arxiv.org/abs/1707.07998) and [here](https://arxiv.org/abs/1708.02711).
+[Bottom-Up Attention](https://github.com/peteanderson80/bottom-up-attention) for providing the pretrained image features and code for extracting the same as well as the insights for improving performance during classification. You can see their paper [here](https://arxiv.org/abs/1707.07998) and [here](https://arxiv.org/abs/1708.02711).
 
 ## Citation
 If this repository was useful for your work, it would be greatly appreciated if you could cite the following paper:
