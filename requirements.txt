@@ -1,8 +1,10 @@
 joblib==1.1.0
 matplotlib==3.5.1
-numpy==1.22.3
+numpy==1.24.2
 pandas==1.4.1
 tensorflow==2.8.0
 transformers==4.17.0
 scikit-learn==1.0.2
 PyYAML==6.0
+torch==1.12.1
+protobuf==3.20.*

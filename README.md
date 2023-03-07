@@ -26,7 +26,7 @@ The models currently implemented for training and evaluation (scores are on the 
 You will need a machine with 1 GPU (minimum 4GB VRAM), 8-16GB RAM, and 100-250GB free disk space. We recommend using a SSD drive especially for high-speed I/O during training.
 
 #### Software Requirements
-Implementation was done in [Python](https://www.python.org/downloads/) 3.10. We use [CUDA](https://developer.nvidia.com/cuda-toolkit-archive) version 11.2 and [cuDNN](https://developer.nvidia.com/cudnn) version 8.1. We use [Tensorflow](https://www.tensorflow.org/install) version 2.8.0 for training.
+Implementation was done in [Python](https://www.python.org/downloads/) 3.10. We use [CUDA](https://developer.nvidia.com/cuda-toolkit-archive) version 11.6 and [cuDNN](https://developer.nvidia.com/cudnn) version 8.1. We use [Tensorflow](https://www.tensorflow.org/install) version 2.8.0 for training.
 Install necessary packages using:
 ```commandline
 pip install -r requirements.txt
