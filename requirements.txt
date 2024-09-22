@@ -2,7 +2,7 @@ joblib==1.2.0
 matplotlib==3.5.1
 numpy==1.22.3
 pandas==1.4.1
-tensorflow==2.8.0
+tensorflow==2.12.1
 transformers==4.36.0
 scikit-learn==1.0.2
 PyYAML==6.0
