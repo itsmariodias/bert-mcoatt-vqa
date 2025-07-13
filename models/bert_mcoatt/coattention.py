@@ -1,4 +1,8 @@
 """
+Hierarchical Question-Image Co-Attention for Visual Question Answering
+Ref: https://arxiv.org/abs/1606.00061
+Ref: https://github.com/jiasenlu/HieCoAttenVQA
+
 Based on Parallel Co-Attention mechanism introduced in HieCoAtt.
 Replaced tanh activation with ReLU. Added Layernorm before each activation.
 """

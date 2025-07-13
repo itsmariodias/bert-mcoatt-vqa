@@ -1,3 +1,12 @@
+"""
+Copyright 2022 Mario Dias, Hansie Aloj, Nijo Ninan, Dipali Koshti.
+Licensed under the Apache License 2.0.
+
+BERT based Multiple Parallel Co-attention Model for Visual Question Answering
+Ref: https://ieeexplore.ieee.org/document/9788253
+
+This model is introduced in our paper referenced above.
+"""
 from models.bert_mcoatt import coattention
 
 import tensorflow as tf

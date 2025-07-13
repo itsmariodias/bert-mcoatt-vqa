@@ -105,3 +105,22 @@ def get_answer(answers, answers_type):
         exit(-1)
 
     return answers
+
+
+def create_soft_labels(answers, num_ans_candidates):
+    """
+    compute the soft scores for each question by determining how many times the
+    same answer occurs in a set of 10 answers
+    """
+    target = np.zeros([len(answers), num_ans_candidates], dtype=np.float32)
+    for idx, answer in enumerate(answers):
+        labels = np.array(answer['labels'])
+        scores = np.array(answer['scores'], dtype=np.float32)
+        if len(labels):
+            answer['labels'] = labels
+            answer['scores'] = scores
+            target[idx, labels] = scores
+        else:
+            answer['labels'] = None
+            answer['scores'] = None
+    return target

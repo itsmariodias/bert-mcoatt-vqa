@@ -23,12 +23,12 @@ def parse_args():
 
     parser.add_argument('--CONFIG', dest='CONFIG_NAME',
                         help='configuration for model building located at configs/, e.g. bert_hiecoatt, '
-                             'bert_hiecoatt_shared, bert_mcoatt',
+                             'bert_mcoatt, bert_mcan',
                         type=str, required=True)
 
     parser.add_argument('--SPLIT', dest='TRAIN_SPLIT',
-                        choices=['train', 'train+val'],
-                        help="set training split, eg.'train', 'train+val'",
+                        choices=['train', 'train+val', 'train+val+vg'],
+                        help="set training split, eg.'train', 'train+val', 'train+val+vg'",
                         type=str)
 
     parser.add_argument('--VAL_MODE', dest='VAL_MODE',
@@ -36,13 +36,13 @@ def parse_args():
                         help="set val to full or half, eg. 'val-half', 'val'",
                         type=str)
 
-    parser.add_argument('--EVAL', dest='EVAL',
-                        help="evaluate model after training",
-                        type=bool)
+    parser.add_argument('--NO_EVAL', dest='EVAL',
+                        help="don't evaluate model after training",
+                        action='store_false')
 
     parser.add_argument('--PRELOAD', dest='PRELOAD',
                         help='pre-load the image features into memory to increase the I/O speed',
-                        type=bool)
+                        action='store_true')
 
     parser.add_argument('--SAVE_PERIOD', dest='SAVE_PERIOD',
                         help='after how many epochs to save checkpoint',
@@ -90,13 +90,16 @@ def parse_args():
 
     parser.add_argument('--VERBOSE', dest='VERBOSE',
                         help='verbose print',
-                        type=bool)
+                        action='store_true')
 
     args = parser.parse_args()
     return args
 
 
 def run(C):
+    # create directory if it doesn't exist
+    os.makedirs(C.DATA_DIR, exist_ok=True)
+
     set_seed(C.SEED)
 
     coco_extract(C)
@@ -106,7 +109,7 @@ def run(C):
     if C.RUN_MODE == "train":
         model = train(C)
         if C.EVAL:
-            if C.SPLIT == 'train':
+            if C.TRAIN_SPLIT == 'train':
                 C.RUN_MODE = "eval"
             else:
                 C.RUN_MODE = "test"
